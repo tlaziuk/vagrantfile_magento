@@ -7,6 +7,8 @@ LOCALIP = "192.168.33.10"
 
 LOCALDOMAIN = LOCALIP
 
+HOSTNAME = LOCALDOMAIN
+
 PREFIX = ""
 
 LOCALXML = <<XML
@@ -74,12 +76,10 @@ fi
 SCRIPT
 
 Vagrant.configure("2") do |config|
-
     config.vm.box = "scotch/box"
     config.vm.box_version = "~> 2.5"
     config.vm.network "private_network", ip: LOCALIP
-    config.vm.hostname = LOCALDOMAIN
+    config.vm.hostname = HOSTNAME
     config.vm.synced_folder ".", "/var/www/public", :mount_options => ["dmode=777", "fmode=666"]
     config.vm.provision "shell", inline: SH
-
 end
