@@ -66,8 +66,7 @@ cd /home/vagrant/www
 FILE=(*.sql)
 if [ -f "${FILE[0]}" ]; then
     n98-magerun.phar db:import "${FILE[0]}"
-    n98-magerun.phar db:query "update #{PREFIX}core_config_data set value = 'http://#{LOCALDOMAIN}/' where path = 'web/unsecure/base_url';"
-    n98-magerun.phar db:query "update #{PREFIX}core_config_data set value = 'http://#{LOCALDOMAIN}/' where path = 'web/secure/base_url';"
+    n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = 'http://#{LOCALDOMAIN}/' WHERE path = 'web/unsecure/base_url' OR path = 'web/secure/base_url';"
     n98-magerun.phar cache:disable
     n98-magerun.phar cache:clean
     n98-magerun.phar cache:flush
