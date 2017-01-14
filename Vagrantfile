@@ -12,6 +12,7 @@ HOSTNAME = LOCALDOMAIN
 PREFIX = ""
 
 LOCALXML = <<XML
+<?xml version="1.0"?>
 <config>
     <global>
         <install>
