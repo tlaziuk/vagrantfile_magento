@@ -64,15 +64,19 @@ chmod a+x /usr/local/bin/n98-magerun.phar
 ln -f -s /var/www/public /home/vagrant/www
 sudo apt-get install pv htop
 cd /home/vagrant/www
-FILE=(*.sql)
-if [ -f "${FILE[0]}" ]; then
-    n98-magerun.phar db:import "${FILE[0]}"
-    n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = 'http://#{LOCALDOMAIN}/' WHERE path = 'web/unsecure/base_url' OR path = 'web/secure/base_url';"
-    n98-magerun.phar cache:disable
-    n98-magerun.phar cache:clean
-    n98-magerun.phar cache:flush
-    n98-magerun.phar cache:dir:flush
-fi
+for FILE in *.sql
+do
+    n98-magerun.phar db:import "$FILE"
+done
+for FILE in *.sql.gz
+do
+    n98-magerun.phar db:import "$FILE" --compression=gz
+done
+n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = 'http://#{LOCALDOMAIN}/' WHERE path = 'web/unsecure/base_url' OR path = 'web/secure/base_url';"
+n98-magerun.phar cache:disable
+n98-magerun.phar cache:clean
+n98-magerun.phar cache:flush
+n98-magerun.phar cache:dir:flush
 SCRIPT
 
 Vagrant.configure("2") do |config|
