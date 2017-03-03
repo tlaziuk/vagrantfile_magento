@@ -11,6 +11,8 @@ HOSTNAME = LOCALDOMAIN
 
 PREFIX = ""
 
+KEY = LOCALDOMAIN
+
 LOCALXML = <<XML
 <?xml version="1.0"?>
 <config>
@@ -19,7 +21,7 @@ LOCALXML = <<XML
             <date>#{Time.now.to_datetime.rfc3339}</date>
         </install>
         <crypt>
-            <key></key>
+            <key>#{KEY}</key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
@@ -55,7 +57,7 @@ LOCALXML = <<XML
 XML
 
 SH = <<SCRIPT
-wget -q -O - "https://raw.githubusercontent.com/Chikoumi/Ioncube-Autoinstall/master/eng_ioncube.sh" | bash
+wget -q -O - "https://raw.githubusercontent.com/Chikoumi/Ioncube-Autoinstall/master/eng_ioncube.sh" | sudo bash
 cat > /var/www/public/app/etc/local.xml <<- EOF
 #{LOCALXML}
 EOF
