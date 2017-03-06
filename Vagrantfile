@@ -3,11 +3,15 @@
 
 require 'date'
 
-LOCALIP = "192.168.33.10"
+GUESTIP = "192.168.33.10"
 
-LOCALDOMAIN = LOCALIP
+LOCALIP = "localhost"
 
-HOSTNAME = LOCALDOMAIN
+LOCALPORT = 8080
+
+LOCALDOMAIN = "#{LOCALIP}:#{LOCALPORT}"
+
+HOSTNAME = GUESTIP
 
 PREFIX = ""
 
@@ -68,11 +72,15 @@ sudo apt-get install pv htop
 cd /home/vagrant/www
 for FILE in *.sql
 do
-    n98-magerun.phar db:import "$FILE"
+    if [ -s "$FILE" ]; then
+        n98-magerun.phar db:import "$FILE"
+    fi
 done
 for FILE in *.sql.gz
 do
-    n98-magerun.phar db:import "$FILE" --compression=gz
+    if [ -s "$FILE" ]; then
+        n98-magerun.phar db:import "$FILE" --compression=gz
+    fi
 done
 n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = 'http://#{LOCALDOMAIN}/' WHERE path = 'web/unsecure/base_url' OR path = 'web/secure/base_url';"
 n98-magerun.phar cache:disable
@@ -84,7 +92,8 @@ SCRIPT
 Vagrant.configure("2") do |config|
     config.vm.box = "scotch/box"
     config.vm.box_version = "~> 2.5"
-    config.vm.network "private_network", ip: LOCALIP
+    config.vm.network "private_network", ip: GUESTIP
+    config.vm.network "forwarded_port", guest: 80, host: LOCALPORT
     config.vm.hostname = HOSTNAME
     config.vm.synced_folder ".", "/var/www/public", :mount_options => ["dmode=777", "fmode=666"]
     config.vm.provision "shell", inline: SH
