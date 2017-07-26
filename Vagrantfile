@@ -5,13 +5,13 @@ require 'date'
 
 GUESTIP = "192.168.33.10"
 
-LOCALIP = "localhost"
+LOCALIP = "127.0.0.1"
 
 LOCALPORT = 8080
 
 LOCALDOMAIN = "#{LOCALIP}:#{LOCALPORT}"
 
-HOSTNAME = GUESTIP
+HOSTNAME = File.basename(Dir.getwd)
 
 PREFIX = ""
 
@@ -85,6 +85,7 @@ done
 n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = 'http://#{LOCALDOMAIN}/' WHERE path IN ('web/unsecure/base_url', 'web/secure/base_url');"
 n98-magerun.phar db:query "UPDATE #{PREFIX}core_config_data SET value = '0' WHERE path IN ('dev/css/merge_css_files', 'dev/js/merge_files');"
 n98-magerun.phar db:query "DELETE FROM #{PREFIX}core_config_data WHERE (path LIKE 'web/unsecure/%' OR path LIKE 'web/secure/%') AND scope_id != 0;"
+n98-magerun.phar db:query "DELETE FROM #{PREFIX}core_config_data WHERE path = 'dev/restrict/allow_ips';"
 n98-magerun.phar cache:disable
 n98-magerun.phar cache:clean
 n98-magerun.phar cache:flush
@@ -98,6 +99,6 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: GUESTIP
     config.vm.network "forwarded_port", guest: 80, host: LOCALPORT
     config.vm.hostname = HOSTNAME
-    config.vm.synced_folder ".", "/var/www/public", :mount_options => ["dmode=777", "fmode=666"]
+    config.vm.synced_folder ".", "/var/www/public"
     config.vm.provision "shell", inline: SH
 end
