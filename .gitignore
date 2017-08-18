@@ -1,6 +1,7 @@
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
 Session.vim
+[._][Ss]ession.vim
 .netrwhist
 *~
 tags

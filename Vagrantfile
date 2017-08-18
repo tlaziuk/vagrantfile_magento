@@ -90,7 +90,6 @@ n98-magerun.phar cache:disable
 n98-magerun.phar cache:clean
 n98-magerun.phar cache:flush
 n98-magerun.phar cache:dir:flush
-n98-magerun.phar index:reindex:all
 SCRIPT
 
 Vagrant.configure("2") do |config|
